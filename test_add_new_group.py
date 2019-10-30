@@ -9,10 +9,13 @@ class NewGroup1(unittest.TestCase):
         self.wd = webdriver.Chrome()
         self.wd.implicitly_wait(30)
 
-    def open_home_page(self, wd):
+    def open_home_page(self):
+        wd = self.wd
         wd.get("http://localhost/addressbook/")
 
-    def login(self, wd, username, password):
+    def login(self, username, password):
+        wd = self.wd
+        self.open_home_page()
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
         wd.find_element_by_name("user").send_keys(username)
@@ -23,11 +26,13 @@ class NewGroup1(unittest.TestCase):
         wd.find_element_by_id("LoginForm").click()
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
-    def open_groups_page(self, wd):
-        # go to groups page
+    def open_groups_page(self):
+        wd = self.wd
         wd.find_element_by_link_text("groups").click()
 
-    def add_new_group(self, wd, group):
+    def add_new_group(self, group):
+        wd = self.wd
+        self.open_groups_page()
         # open new group add form
         wd.find_element_by_name("new").click()
         # fill out new group form ans save new group
@@ -41,32 +46,21 @@ class NewGroup1(unittest.TestCase):
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         wd.find_element_by_name("submit").click()
+        self.open_groups_page()
 
-    def return_to_groups_page(self, wd):
-        # return to groups page
-        wd.find_element_by_link_text("group page").click()
-
-    def logout(self, wd):
-        # logout
+    def logout(self):
+        wd = self.wd
         wd.find_element_by_link_text("Logout").click()
 
     def test_new_group(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_groups_page(wd)
-        self.add_new_group(wd, Group(name="gr1", header="header 1", footer="footer 1"))
-        self.return_to_groups_page(wd)
-        self.logout(wd)
+        self.login(username="admin", password="secret")
+        self.add_new_group(Group(name="gr1", header="header 1", footer="footer 1"))
+        self.logout()
 
     def test_new_empty_group(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_groups_page(wd)
-        self.add_new_group(wd, Group(name="", header="", footer=""))
-        self.return_to_groups_page(wd)
-        self.logout(wd)
+        self.login(username="admin", password="secret")
+        self.add_new_group(Group(name="", header="", footer=""))
+        self.logout()
 
     def tearDown(self):
         self.wd.quit()
