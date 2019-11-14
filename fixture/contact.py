@@ -98,7 +98,7 @@ class ContactHelper:
     def modify(self, contact):
         wd = self.app.wd
         self.app.go_to_hp()
-        wd.find_element_by_css_selector('[href = "edit.php?%"]')
+        wd.find_element_by_xpath('// a[contains( @ href, "edit.php")]').click()
         # fill form fields
         wd.find_element_by_name('firstname').click()
         wd.find_element_by_name('firstname').clear()
@@ -172,5 +172,5 @@ class ContactHelper:
         wd.find_element_by_name('notes').click()
         wd.find_element_by_name('notes').clear()
         wd.find_element_by_name('notes').send_keys(contact.notes)
-        wd.find_element_by_name('update').click()
+        wd.find_element_by_xpath('//*[@id="content"]/form/input[21]').click()
 
